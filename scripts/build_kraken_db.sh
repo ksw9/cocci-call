@@ -13,11 +13,14 @@ threads=${2}
 # Check if manual download is desired for Kraken2 standard resources
 download_type=${3:-"kraken_implementation"}
 
+# Download kraken2 taxonomy
+kraken2-build --db . --download-taxonomy
+
 # Download kraken2 standard resources
 if [[ ${download_type} == "kraken_implementation" ]]
 then
 
-	# Donwload via Kraken2 --download-library (N.B. using ftp since rsync seems to have issues with some databases)
+	# Download via Kraken2 --download-library (N.B. using ftp since rsync seems to have issues with some databases)
 	for db in bacteria fungi viral human
 	do
 
