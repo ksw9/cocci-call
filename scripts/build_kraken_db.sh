@@ -144,3 +144,6 @@ rm seqid2taxid.map
 
 # Build database
 kraken2-build --build --threads ${threads} --db .
+
+# Clean up
+kraken2-build --clean --db .
