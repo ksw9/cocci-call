@@ -18,7 +18,7 @@ process TrimFastQ {
 
   """
   # Trim adapters and short reads, for all platforms but NextSeq
-  if [ "${params.nextseq}" = false ]
+  if [ "${params.nextseq}" = "false" ]
   then
   
     trim_galore \
@@ -34,7 +34,6 @@ process TrimFastQ {
   else
   
     trim_galore \
-    --cores 4 \
     --cores \$SLURM_CPUS_ON_NODE \
     --output_dir . \
     --basename ${sample_id} \

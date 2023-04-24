@@ -27,7 +27,14 @@ process Kraken {
   grep -E 'Coccidioides (taxid 5500)|Coccidioides immitis|Coccidioides posadasii' ${sample_id}.out | awk '{print \$2}' > ${sample_id}_reads.list
 
   # Use bbmap to select reads corresponding to taxa of interest.
-  filterbyname.sh int=false in1=${sample_id}_plain_1.fq.gz in2=${sample_id}_plain_2.fq.gz out1=${sample_id}_kr_1.fq.gz out2=${sample_id}_kr_2.fq.gz names=${sample_id}_reads.list include=true overwrite=true
+  #filterbyname.sh int=false in1=${sample_id}_plain_1.fq.gz in2=${sample_id}_plain_2.fq.gz out1=${sample_id}_kr_1.fq.gz out2=${sample_id}_kr_2.fq.gz names=${sample_id}_reads.list include=true overwrite=true
+
+  # bbmap tends to glitch, so the following code is meant to replace it
+  bgzip -d ${sample_id}_plain_1.fq.gz
+  awk '{ print }' ${sample_id}_reads.list awk | grep -f - -A 3 ${sample_id}_plain_1.fq | bgzip > ${sample_id}_kr_1.fq.gz
+  
+  bgzip -d ${sample_id}_plain_2.fq.gz
+  awk '{ print }' ${sample_id}_reads.list awk | grep -f - -A 3 ${sample_id}_plain_2.fq | bgzip > ${sample_id}_kr_2.fq.gz
   
   # Summarize Kraken statistics. 
   #${projectDir}/scripts/kraken_stats.sh ${sample_id}_kraken.report
