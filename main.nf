@@ -15,7 +15,7 @@ include { MapReads_BWA as MapReads_Posadasii } from './modules/map_reads_bwa.nf'
 include { CheckMappedFiles } from './modules/check_mapping.nf'
 include { GATK } from './workflows/gatk_calling.nf'
 include { LOFREQ } from './workflows/lofreq_calling.nf'
-//include { SummarizeRun } from './modules/make_run_summary.nf'
+include { SummarizeRun } from './modules/make_run_summary.nf'
 
 workflow {
 
@@ -107,10 +107,10 @@ workflow {
   // MAKING SUMMARY REPORT ---------------- //
 
   // Creating channel for reads_list file (needed to parse trimming_reports)
-  //Channel
-  //.fromPath("${params.resources_dir}/${params.reads_list}")
-  //.set{reads_list_file}
+  Channel
+    .fromPath("${params.resources_dir}/${params.reads_list}")
+    .set{ reads_list_file }
 
-  //SummarizeRun(reads_list_file, TrimFastQ.out.trimming_reports.flatten().collect(), Kraken.out.kraken_reports.collect(), mapping_reports.collect(), coverage_stats.collect(), dup_metrics.collect(), TbProfiler.out.tbprofiler_reports.collect())
+  SummarizeRun(reads_list_file, TrimFastQ.out.trimming_reports.flatten().collect(), Kraken.out.kraken_reports.collect(), mapping_reports.collect(), coverage_stats.collect(), dup_metrics.collect())
 
 }
