@@ -30,7 +30,7 @@ workflow {
   // Channels for immitis BWA index
   Channel.fromPath("${params.resources_dir}/${params.immitis_bwa_index_path}/*{amb,ann,bwt,pac,sa}")
     .collect()
-    .set{immitis_bwa_index}
+    .set{ immitis_bwa_index }
 
   // Channel for immitis GATK dictionary (absolute path from params won't do since it has to be present in the dir where GATK is launched)
   immitis_gatk_dictionary = Channel.fromPath("${params.resources_dir}/${params.immitis_gatk_dictionary_path}")
@@ -44,7 +44,7 @@ workflow {
   // Channels for posadasii BWA index
   Channel.fromPath("${params.resources_dir}/${params.posadasii_bwa_index_path}/*{amb,ann,bwt,pac,sa}")
     .collect()
-    .set{posadasii_bwa_index}
+    .set{ posadasii_bwa_index }
 
   // Channel for posadasii GATK dictionary (absolute path from params won't do since it has to be present in the dir where GATK is launched)
   posadasii_gatk_dictionary = Channel.fromPath("${params.resources_dir}/${params.posadasii_gatk_dictionary_path}")
@@ -52,7 +52,7 @@ workflow {
   // Channel for Kraken2 database
   Channel.fromPath("${params.resources_dir}/${params.kraken_database_path}/*{kmer_distrib,k2d,txt,map}")
     .collect()
-    .set{kraken_database}
+    .set{ kraken_database }
 
   // CREATING RAW-READS CHANNEL ----------- //
 
@@ -60,7 +60,7 @@ workflow {
     .fromPath("${params.resources_dir}/${params.reads_list}")
     .splitCsv(header: true, sep: '\t')
     .map{row -> tuple(row.sample, row.fastq_1, row.fastq_2, row.batch)}
-    .set{raw_reads}
+    .set{ raw_reads }
 
   // TRIMGALORE --------------------------- //
 
@@ -111,6 +111,6 @@ workflow {
     .fromPath("${params.resources_dir}/${params.reads_list}")
     .set{ reads_list_file }
 
-  SummarizeRun(reads_list_file, TrimFastQ.out.trimming_reports.flatten().collect(), Kraken.out.kraken_reports.collect(), mapping_reports.collect(), coverage_stats.collect(), dup_metrics.collect())
+  SummarizeRun(reads_list_file, TrimFastQ.out.trimming_reports.flatten().collect(), Kraken.out.kraken_reports.collect(), MapReads_Immitis.out.mapping_reports.collect(), MapReads_Immitis.out.coverage_stats.collect(), MapReads_Immitis.out.dup_metrics.collect(), MapReads_Posadasii.out.mapping_reports.collect(), MapReads_Posadasii.out.coverage_stats.collect(), MapReads_Posadasii.out.dup_metrics.collect())
 
 }

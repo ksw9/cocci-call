@@ -37,12 +37,19 @@ workflow GATK {
 
   // ANNOTATE GATK VCF -------------------- //
 
+  // Channels for snpEff resources
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_dir}")
+    .set{ snpeff_dir }
+
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_datapath}")
+    .set{ snpeff_datapath }
+
   // Join channels by sample_id and batch
   reference_fasta
     .join(VariantsGATK.out.gatk_vcf_filt, by: [0,1], remainder: false)
     .set{ gatk_vcf_filt }
 
   // Annotation
-  AnnotateVCF("gatk", gatk_vcf_filt)
+  AnnotateVCF("gatk", snpeff_dir, snpeff_datapath, gatk_vcf_filt)
 
 }

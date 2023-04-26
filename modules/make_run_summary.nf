@@ -10,9 +10,12 @@ process SummarizeRun {
   path reads_list
   path trimming_reports
   path kraken_reports
-  path mapping_reports
-  path coverage_stats
-  path dup_metrics
+  path mapping_reports_immitis
+  path coverage_stats_immitis
+  path dup_metrics_immitis
+  path mapping_reports_posadasii
+  path coverage_stats_posadasii
+  path dup_metrics_posadasii
 
   output:
   path "pipeline_run_summary_*.tsv"

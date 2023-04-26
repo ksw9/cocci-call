@@ -25,12 +25,18 @@ workflow LOFREQ {
 
   // ANNOTATE GATK VCF -------------------- //
 
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_dir}")
+    .set{ snpeff_dir }
+
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_datapath}")
+    .set{ snpeff_datapath }
+
   // Join channels by sample_id and batch
   reference_fasta
     .join(VariantsLoFreq.out.lofreq_vcf_filt, by: [0,1], remainder: false)
     .set{ lofreq_vcf_filt }
 
   // Annotation
-  AnnotateVCF("LoFreq", lofreq_vcf_filt)
+  AnnotateVCF("LoFreq", snpeff_dir, snpeff_datapath, lofreq_vcf_filt)
 
 }

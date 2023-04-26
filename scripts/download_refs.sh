@@ -27,18 +27,6 @@ posadasii_ref_version="GCA_018416015.2"
 posadasii_ref_name="${posadasii_ref_version}.fasta"
 posadasii_gatk_dictionary_name="${posadasii_ref_version}.dict"
 
-# Make necessary directories
-mkdir -p ${res_dir}
-cd ${res_dir}
-mkdir -p ${immitis_ref_dir}
-mkdir -p ${immitis_bwa_index_dir}
-mkdir -p ${immitis_gatk_dictionary_dir}
-mkdir -p ${posadasii_ref_dir}
-mkdir -p ${posadasii_bwa_index_dir}
-mkdir -p ${posadasii_gatk_dictionary_dir}
-#mkdir -p ${kraken2_db_dir} # Will be made by the script invoked at point 3
-mkdir -p ${input_dir}
-
 # Define run command and options
 if [ "$container" = "docker" ]
 then
@@ -64,6 +52,18 @@ else
 	image="docker://ksw9/mtb-call"
 	
 fi
+
+# Make necessary directories
+mkdir -p ${res_dir}
+cd ${res_dir}
+mkdir -p ${immitis_ref_dir}
+mkdir -p ${immitis_bwa_index_dir}
+mkdir -p ${immitis_gatk_dictionary_dir}
+mkdir -p ${posadasii_ref_dir}
+mkdir -p ${posadasii_bwa_index_dir}
+mkdir -p ${posadasii_gatk_dictionary_dir}
+#mkdir -p ${kraken2_db_dir} # Will be made by the script invoked at point 3
+mkdir -p ${input_dir}
 
 # Requires: entrez-direct (conda), bwa, GATK, samtools, kraken2, all present in the container.
 # Run each step within the image. Need to mount local directory so that the resources are downloaded locally, not just in the container.
@@ -119,8 +119,8 @@ ${container} ${run_command} ${bind_option} ${other_options} ${image} java -jar s
 # Building annotations for C. posadasii
 # Step 1. Configure a new genome
 echo "" >> snpEff/snpEff.config
-echo "# Coccidioides posadasii genome, version ${posadasii_ref_version}" > snpEff/snpEff.config
-echo "${posadasii_ref_version}.genome : Coccidioides_posadasii_${posadasii_ref_version}" > snpEff/snpEff.config
+echo "# Coccidioides posadasii genome, version ${posadasii_ref_version}" >> snpEff/snpEff.config
+echo "${posadasii_ref_version}.genome : Coccidioides_posadasii_${posadasii_ref_version}" >> snpEff/snpEff.config
 
 # Step 2. Building a database from GFF
 mkdir -p snpEff/data/${posadasii_ref_version}
