@@ -8,8 +8,8 @@ process AnnotateVCF {
 
   input:
   each variant_caller
-  path(snpeff_dir)
-  path(snpeff_datapath)
+  each path(snpeff_dir)
+  each path(snpeff_datapath)
   tuple val(sample_id), val(batch), path(reference), path(vcf)
 
   output:
