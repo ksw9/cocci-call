@@ -33,11 +33,11 @@ process Kraken {
   # bbmap tends to glitch, so the following code is meant to replace it
   bgzip -d ${sample_id}_plain_1.fq.gz
   awk '{ if(\$0 ~ /@/) { print \$0" " } else { print \$0 } }' ${sample_id}_plain_1.fq > ${sample_id}_plain_1_mod.fq
-  awk '{ print }' ${sample_id}_reads.list awk | grep -f - -A 3 ${sample_id}_plain_1_mod.fq | bgzip > ${sample_id}_kr_1.fq.gz
+  awk '{ print }' ${sample_id}_reads.list | grep -f - -A 3 ${sample_id}_plain_1_mod.fq | bgzip > ${sample_id}_kr_1.fq.gz
   
   bgzip -d ${sample_id}_plain_2.fq.gz
   awk '{ if(\$0 ~ /@/) { print \$0" " } else { print \$0 } }' ${sample_id}_plain_2.fq > ${sample_id}_plain_2_mod.fq
-  awk '{ print }' ${sample_id}_reads.list awk | grep -f - -A 3 ${sample_id}_plain_2_mod.fq | bgzip > ${sample_id}_kr_2.fq.gz
+  awk '{ print }' ${sample_id}_reads.list | grep -f - -A 3 ${sample_id}_plain_2_mod.fq | bgzip > ${sample_id}_kr_2.fq.gz
   
   # Summarize Kraken statistics. 
   #${projectDir}/scripts/kraken_stats.sh ${sample_id}_kraken.report
