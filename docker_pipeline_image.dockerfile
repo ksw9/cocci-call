@@ -17,31 +17,33 @@ RUN conda install -y mamba
 
 # Installing packages
 RUN mamba install -y \
-    bbmap \
-    bcftools \
-    bowtie2 \
-    bwa \
-    cutadapt \
-    entrez-direct \
-    fastqc \
-    gatk \
-    kraken2 \
-    lofreq \
-    mummer \
-    mykrobe \
-    picard \
-    sambamba \
-    tabix \
-    trim-galore && \
+    bbmap=39.01 \
+    bcftools=1.12 \
+    bwa=0.7.17 \
+    cutadapt=4.4 \
+    entrez-direct=16.2 \
+    fastqc=0.12.1 \
+    gatk=3.6 \
+    gatk4=4.4.0.0 \
+    kraken2=2.1.2 \
+    lofreq=2.1.5 \
+    mummer=3.23 \
+    mykrobe=0.12.1 \
+    openjdk=17.0.3 \
+    picard=2.20.4 \
+    sambamba=0.8.1 \
+    seqtk=1.3 \
+    tabix=1.11 \
+    trim-galore=0.6.10 \
     conda clean -afty
 
 ### FIX KRAKEN2-BUILD ---------------------- ###
 
 # Fixes the "rsync_from_ncbi.pl: unexpected FTP path (new server?)" error
 # Thanks to Bent Petersen, PhD (https://www.bpetersen.dk/post/kraken2-rsync_from_ncbi-pl-unexpected-ftp-path-new-server-for)
-RUN mv /opt/conda/libexec/rsync_from_ncbi.pl /opt/conda/libexec/rsync_from_ncbi.pl.bak && \
-    sed '46 s/ftp/https/' /opt/conda/libexec/rsync_from_ncbi.pl.bak > /opt/conda/libexec/rsync_from_ncbi.pl && \
-    chmod 775 /opt/conda/libexec/rsync_from_ncbi.pl
+#RUN mv /opt/conda/libexec/rsync_from_ncbi.pl /opt/conda/libexec/rsync_from_ncbi.pl.bak && \
+#    sed '46 s/ftp/https/' /opt/conda/libexec/rsync_from_ncbi.pl.bak > /opt/conda/libexec/rsync_from_ncbi.pl && \
+#    chmod 775 /opt/conda/libexec/rsync_from_ncbi.pl
 
 ### SETTING WORKING ENVIRONMENT ------------ ###
 
