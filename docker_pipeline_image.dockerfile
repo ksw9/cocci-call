@@ -23,19 +23,19 @@ RUN mamba install -y \
     cutadapt=4.4 \
     entrez-direct=16.2 \
     fastqc=0.12.1 \
-    gatk=3.6 \
-    gatk4=4.4.0.0 \
+    gatk4=4.3.0.0 \
     kraken2=2.1.2 \
     lofreq=2.1.5 \
     mummer=3.23 \
     mykrobe=0.12.1 \
-    openjdk=17.0.3 \
-    picard=2.20.4 \
+    picard=2.27.5 \
     sambamba=0.8.1 \
     seqtk=1.3 \
     tabix=1.11 \
-    trim-galore=0.6.10 \
+    trim-galore=0.6.10 && \
     conda clean -afty
+
+RUN mamba install --force-reinstall -y java-jdk # Needed to fix "java: symbol lookup error: java: undefined symbol: JLI_StringDup" error
 
 ### FIX KRAKEN2-BUILD ---------------------- ###
 
