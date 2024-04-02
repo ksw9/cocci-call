@@ -4,6 +4,8 @@
 #### Download references & index reference genomes for Coccidioides variant calling pipeline ####
 #################################################################################################
 
+### INIT ----------------------------------- ###
+
 # Define local container tool: docker (default), podman, or singularity.
 container=${1:-"docker"}
 
@@ -53,7 +55,7 @@ else
 	
 fi
 
-# Make necessary directories
+# Make necessary directories in res_dir, then cd to res_dir
 mkdir -p ${res_dir}
 cd ${res_dir}
 mkdir -p ${immitis_ref_dir}
@@ -65,39 +67,56 @@ mkdir -p ${posadasii_gatk_dictionary_dir}
 #mkdir -p ${kraken2_db_dir} # Will be made by the script invoked at point 3
 mkdir -p ${input_dir}
 
-# Requires: entrez-direct (conda), bwa, GATK, samtools, kraken2, all present in the container.
+# N.B. Download masking files from masking_files/ dir on the Github repo,
+# unzip them, and place in same dir as the download_refs.sh script
+cp ../immitis_repeats.fa .
+cp ../posadasii_repeats.fa .
+
+### PIPELINE'S RESOURCES PREP -------------- ###
+
+# Requires: bwa, GATK, samtools, kraken2, all present in the container.
 # Run each step within the image. Need to mount local directory so that the resources are downloaded locally, not just in the container.
 
-## 1. Reference genome ##
+### 1. Reference genome download and masking ###
 
-# Download reference fasta for C. immitis
-${container} ${run_command} ${bind_option} ${other_options} ${image}:efetch /bin/bash -c "esearch -db nucleotide -query ${immitis_ncbi_id} | efetch -format fasta > ${immitis_ref_dir}${immitis_ref_name}"
+# Download reference fasta and GFF for C. immitis
+${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${immitis_ref_version}/download?include_annotation_type=GENOME_FASTA,GENOME_GFF&filename=${immitis_ref_version}.zip" -H "Accept: application/zip"
+unzip ${immitis_ref_version}.zip
+mv ncbi_dataset/data/${immitis_ref_version}/${immitis_ref_version}*.fna ${immitis_ref_name}
+mv ncbi_dataset/data/${immitis_ref_version}/*.gff ${immitis_ref_dir}genes.gff
+rm -r README.md ncbi_dataset ${immitis_ref_version}.zip
 
 # Masking C. immitis fasta with RepeatMasker
-${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker /bin/bash -c "RepeatMasker -species fungi --norna ${immitis_ref_dir}${immitis_ref_name}"
-mv ${immitis_ref_dir}${immitis_ref_name} ${immitis_ref_dir}${immitis_ref_name}.bak
-mv ${immitis_ref_dir}${immitis_ref_name}.masked ${immitis_ref_dir}${immitis_ref_name}
-rm ${immitis_ref_dir}${immitis_ref_name}.{out,tbl,cat.gz}
+${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker /bin/bash -c "RepeatMasker -lib immitis_repeats.fa --norna ${immitis_ref_name}"
+mv ${immitis_ref_name} ${immitis_ref_dir}${immitis_ref_name}.bak
+mv ${immitis_ref_name}.masked ${immitis_ref_dir}${immitis_ref_name}
+rm ${immitis_ref_name}.{out,tbl,cat.gz}
+
+# Add fasta sequence to C. posadasii GFF
+echo "" >> ${immitis_ref_dir}genes.gff
+echo "##FASTA" >> ${immitis_ref_dir}genes.gff
+cat ${immitis_ref_dir}${immitis_ref_name}.bak >> ${immitis_ref_dir}genes.gff
 
 # Download reference fasta and GFF for C. posadasii
-${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${posadasii_ref_version}/download?include_annotation_type=GENOME_FASTA,GENOME_GFF,RNA_FASTA,CDS_FASTA,PROT_FASTA,SEQUENCE_REPORT&filename=${posadasii_ref_version}.zip" -H "Accept: application/zip"
+${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker curl -OJX GET "https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${posadasii_ref_version}/download?include_annotation_type=GENOME_FASTA,GENOME_GFF&filename=${posadasii_ref_version}.zip" -H "Accept: application/zip"
 unzip ${posadasii_ref_version}.zip
-mv ncbi_dataset/data/${posadasii_ref_version}/${posadasii_ref_version}*.fna ${posadasii_ref_dir}${posadasii_ref_name}
+mv ncbi_dataset/data/${posadasii_ref_version}/${posadasii_ref_version}*.fna ${posadasii_ref_name}
 mv ncbi_dataset/data/${posadasii_ref_version}/*.gff ${posadasii_ref_dir}genes.gff
 rm -r README.md ncbi_dataset ${posadasii_ref_version}.zip
 
 # Masking C. posadasii fasta with RepeatMasker
-${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker /bin/bash -c "RepeatMasker -species fungi --norna ${posadasii_ref_dir}${posadasii_ref_name}"
-mv ${posadasii_ref_dir}${posadasii_ref_name} ${posadasii_ref_dir}${posadasii_ref_name}.bak
-mv ${posadasii_ref_dir}${posadasii_ref_name}.masked ${posadasii_ref_dir}${posadasii_ref_name}
-rm ${posadasii_ref_dir}${posadasii_ref_name}.{out,tbl,cat.gz}
+${container} ${run_command} ${bind_option} ${other_options} ${image}:repeatmasker /bin/bash -c "RepeatMasker -lib posadasii_repeats.fa --norna ${posadasii_ref_name}"
+mv ${posadasii_ref_name} ${posadasii_ref_dir}${posadasii_ref_name}.bak
+mv ${posadasii_ref_name}.masked ${posadasii_ref_dir}${posadasii_ref_name}
+rm ${posadasii_ref_name}.{out,tbl,cat.gz}
 
 # Add fasta sequence to C. posadasii GFF
 echo "" >> ${posadasii_ref_dir}genes.gff
 echo "##FASTA" >> ${posadasii_ref_dir}genes.gff
 cat ${posadasii_ref_dir}${posadasii_ref_name}.bak >> ${posadasii_ref_dir}genes.gff
 
-# bwa index references
+## 2. bwa indexing -------------------------- ##
+
 ${container} ${run_command} ${bind_option} ${other_options} ${image}:mapping bwa index ${immitis_ref_dir}${immitis_ref_name}
 mv ${immitis_ref_dir}*.{amb,ann,bwt,pac,sa} ${immitis_bwa_index_dir}
 
