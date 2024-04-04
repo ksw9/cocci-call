@@ -44,10 +44,22 @@ process GenerateKraken2DB {
         if [[ \${assembly_level[index]} == "Complete_Genome" ]]
         then
 
-          # Download assembly (note that asm_name[index] may contain '#', which in the url are to be converted to '_')
+          # Download assembly (note that asm_name[index] may contain '#' or '(' or ')', which in the url are to be converted to '_')
           target_file="\${assembly_accession[index]}_\${asm_name[index]}_genomic.fna"
           target_file=\$(echo "\${target_file}" | sed "s/#/_/g")
+          target_file=\$(echo "\${target_file}" | sed "s/(/_/g")
+          target_file=\$(echo "\${target_file}" | sed "s/)/_/g")
           ftp_link="\${ftp_arr[index]}/\${target_file}.gz"
+
+          # Test that the link is good
+          wget_test=\$(wget -S --spider "\${ftp_link}" 2>&1)
+          if [[ "\${wget_test}" != *"Remote file exists."* ]]
+          then
+
+            continue
+
+          fi
+
           wget -w 1 --tries 20 --retry-connrefused --retry-on-host-error \${ftp_link}
 
           # Uncompress file
