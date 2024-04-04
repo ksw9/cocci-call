@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3:4.12.0
+FROM continuumio/miniconda3:latest
 
 ### UPDATING CONDA ------------------------- ###
 
@@ -17,12 +17,7 @@ RUN conda install -y mamba
 
 # Installing packages
 RUN mamba install -y \
-    curl \
-    entrez-direct=16.2 \
-    gzip \
-    openjdk \
-    unzip \
-    wget && \
+    conda mummer && \
     conda clean -afty
 
 ### SETTING WORKING ENVIRONMENT ------------ ###

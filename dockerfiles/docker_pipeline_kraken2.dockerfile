@@ -20,7 +20,8 @@ RUN conda install -y mamba
 RUN mamba install -y \
     bbmap=39.01 \
     kraken2=2.1.2 \
-    seqtk=1.4 && \
+    seqtk=1.4 \
+    wget && \
     conda clean -afty
 
 ### FIX KRAKEN2-BUILD ---------------------- ###

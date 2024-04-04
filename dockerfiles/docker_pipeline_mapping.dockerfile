@@ -22,7 +22,9 @@ RUN mamba install -y \
     homer=4.11 \
     picard=2.27.5 \
     sambamba=0.8.1 \
-    samtools && \
+    samtools \
+    unzip \
+    wget && \
     conda clean -afty
 
 RUN mamba install --force-reinstall -y java-jdk # Needed to fix "java: symbol lookup error: java: undefined symbol: JLI_StringDup" error
