@@ -60,7 +60,7 @@ process GenerateKraken2DB {
 
           fi
 
-          wget -w 1 --tries 20 --retry-connrefused --retry-on-host-error \${ftp_link}
+          wget -w 1 --tries 20 --retry-connrefused --retry-on-host-error "\${ftp_link}"
 
           # Uncompress file
           gzip -d \${target_file}
