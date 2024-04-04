@@ -210,3 +210,9 @@ nextflow run -profile [PROFILES] [OPTIONS] main.nf
 * Slurm
 
 /// ---------------------------------------- ///
+
+## DAG
+
+<p align="center">
+  <img width="731" height="494" src="https://github.com/ksw9/cocci-call/blob/main/images/pipeline_dag.png">
+</p>
