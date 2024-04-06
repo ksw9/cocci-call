@@ -1,7 +1,9 @@
 process DownloadNCBI {
 	
-	// Download NCBI fasta files for bacteria, fungi, viral, human complete genomes
+  // Download NCBI fasta files for bacteria, fungi, viral, human complete genomes
   label 'kraken2'
+
+  errorStrategy 'ignore'
 
   input:
   tuple val(group), val(taxid), val(target_file), val(ftp_link)
