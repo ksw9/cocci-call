@@ -31,14 +31,11 @@ process GetNCBILinks {
       -v accession_column=1 \
       -v name_column=16 \
       -v ftp_column=20 \
-      '\$20 != "na" { printf "%s\t%s\t%s_%s_genomic.fna\t%s/%s_%s_genomic.fna.gz\\n",group,\$6,\$1,\$16,\$20,\$1,\$16 }' \
-      assembly_summary_filtered.txt > ftp_links_tmp.tsv
-
-      # Clean bad chars
-      sed "s/#/_/g" ftp_links_tmp.tsv | sed "s/(/_/g" | sed "s/)/_/g" | sed "s/ /_/g" >> ftp_links.tsv
+      '\$20 != "na" { printf "%s\t%s\t%s_%s_genomic.fna\t%s\\n",group,\$6,\$1,\$16,\$20 }' \
+      assembly_summary_filtered.txt >> ftp_links.tsv
 
       # Remove temp files
-      rm assembly_summary.txt assembly_summary_filtered.txt ftp_links_tmp.tsv
+      rm assembly_summary.txt assembly_summary_filtered.txt
 
   done
   """
