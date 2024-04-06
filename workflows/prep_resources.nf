@@ -4,7 +4,7 @@
 include { GENOMERESOURCES as GENOMERESOURCES_IMMITIS } from '../subworkflows/genome_resources/genome_resources_prep.nf'
 include { GENOMERESOURCES as GENOMERESOURCES_POSADASII } from '../subworkflows/genome_resources/genome_resources_prep.nf'
 include { SnpeffPrep } from '../modules/snpeff_prep/snpeff_prep.nf'
-include { GenerateKraken2DB } from '../modules/kraken/generate_kraken2_db.nf'
+include { GENERATEKRAKEN2DB } from '../subworkflows/genome_resources/kraken2_db_prep.nf'
 
 workflow RESOURCESPREP {
 
@@ -19,6 +19,6 @@ workflow RESOURCESPREP {
 
   // GENERATE KRAKEN2 DATABASE ------------ //
 
-  GenerateKraken2DB()
+  GENERATEKRAKEN2DB()
 
 }
