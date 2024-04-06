@@ -31,7 +31,7 @@ process GetNCBILinks {
       -v accession_column=1 \
       -v name_column=16 \
       -v ftp_column=20 \
-      '{ printf "%s\t%s\t%s_%s_genomic.fna\t%s/%s_%s_genomic.fna.gz\\n",group,\$6,\$1,\$16,\$20,\$1,\$16 }' \
+      '\$20 != "na" { printf "%s\t%s\t%s_%s_genomic.fna\t%s/%s_%s_genomic.fna.gz\\n",group,\$6,\$1,\$16,\$20,\$1,\$16 }' \
       assembly_summary_filtered.txt > ftp_links_tmp.tsv
 
       # Clean bad chars
