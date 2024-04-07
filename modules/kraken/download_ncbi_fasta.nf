@@ -13,7 +13,7 @@ process DownloadNCBI {
 
   """
   # Clean bad chars from file name
-  corrected_target_file=\$(echo "${target_file}" | sed "s/#/_/g" | sed "s/(/_/g" | sed "s/)/_/g" | sed "s/ /_/g" | sed "s/\\///g")
+  corrected_target_file=\$(echo "${target_file}" | sed "s/#/_/g" | sed "s/(/_/g" | sed "s/)/_/g" | sed "s/ /_/g" | sed "s/\\//_/g")
 
   # Test that the link is good
   wget_test=\$(wget -S --spider "${ftp_link}/\${corrected_target_file}.gz" 2>&1)
