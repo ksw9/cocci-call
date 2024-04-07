@@ -34,7 +34,7 @@ process GenerateKraken2DB {
 
     else
       
-      kraken2-build --db \${db_dir} --add-to-library \${target_file}
+      kraken2-build --db \${db_dir} --add-to-library \${fasta}
 
     fi
 
