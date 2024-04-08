@@ -1,6 +1,6 @@
 process DownloadEuPath {
 	
-	// Download EuPathDB46 fasta sequences
+  // Download EuPathDB46 fasta sequences
   label 'kraken2'
 
   input:
@@ -41,8 +41,11 @@ process DownloadEuPath {
     # Modify sequence headers to be compatible with Kraken2
     awk -v taxid=\${taxid} '{ if(\$0 ~ /^>.*/ && \$0 !~ />kraken.*/) { print \$1"|kraken:taxid|"taxid } else { print \$0 } }' \${fasta} > corrected_fasta.fna
 
+    # Replace 'x' bases with 'N'
+    awk '{ if(\$0 ~ /^>/) { print \$0 } else { gsub(/x/, "N", \$0) ; print \$0 } }' corrected_fasta.fna > corrected_fasta_xreplaced.fna
+
     # Replace fasta
-    mv corrected_fasta.fna \${fasta}
+    mv corrected_fasta_xreplaced.fna \${fasta}
 
   done
 
