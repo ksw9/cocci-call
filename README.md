@@ -213,6 +213,14 @@ nextflow run -profile [PROFILES] [OPTIONS] main.nf
 
 ## DAG
 
+### RESOURCESPREP workflow
+
 <p align="center">
-  <img width="731" height="494" src="https://github.com/ksw9/cocci-call/blob/main/images/pipeline_dag.png">
+  <img width="1585" height="273" src="https://github.com/ksw9/cocci-call/blob/main/images/pipeline_dag_resourcesprep.png">
+</p>
+
+### VARIANTCALLING workflow
+
+<p align="center">
+  <img width="731" height="494" src="https://github.com/ksw9/cocci-call/blob/main/images/pipeline_dag_variantcalling.png">
 </p>
