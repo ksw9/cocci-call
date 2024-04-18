@@ -68,7 +68,7 @@ module load docker java nextflow
 
 ```
 cd cocci-call
-nextflow run -profile singularity,download_refs --repeatmasker_mask true --nucmer_mask true --resources_dir "$(pwd)/resources"
+nextflow run main.nf -profile singularity,download_refs --repeatmasker_mask true --nucmer_mask true --resources_dir "$(pwd)/resources"
 ```
 
 4. Modify the config file (nextflow.config):
@@ -155,7 +155,7 @@ All outputs are stored in the results directory, within the project directory. D
 ## RUN COMMAND:
 
 ```
-nextflow run -profile [PROFILES] [OPTIONS] main.nf
+nextflow run main.nf -profile [PROFILES] [OPTIONS] main.nf
 ```
 
 ### PROFILES:
