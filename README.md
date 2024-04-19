@@ -64,14 +64,20 @@ git clone https://github.com/ksw9/cocci-call.git
 module load docker java nextflow 
 ```
 
-3. Run RESOURCESPREP workflow to populate your resources directory with required references and databases. Note that Kraken2 database generation can take days, so make sure to submit a Slurm job with appropriate quality of service specifications.
+3. Unzip the masking files in masking_files folder.
+
+```
+gzip -d masking_files/*.fa.gz 
+```
+
+4. Run RESOURCESPREP workflow to populate your resources directory with required references and databases. Note that Kraken2 database generation can take days, so make sure to submit a Slurm job with appropriate quality of service specifications.
 
 ```
 cd cocci-call
 nextflow run main.nf -profile singularity,download_refs --repeatmasker_mask true --nucmer_mask true --resources_dir "$(pwd)/resources"
 ```
 
-4. Modify the config file (nextflow.config):
+5. Modify the config file (nextflow.config):
 
 * Update resources_dir (full path to directory resources)
 
@@ -155,7 +161,7 @@ All outputs are stored in the results directory, within the project directory. D
 ## RUN COMMAND:
 
 ```
-nextflow run main.nf -profile [PROFILES] [OPTIONS] main.nf
+nextflow run main.nf -profile [PROFILES] [OPTIONS]
 ```
 
 ### PROFILES:
