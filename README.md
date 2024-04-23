@@ -85,6 +85,11 @@ nextflow run main.nf -profile singularity,download_refs --repeatmasker_mask true
 
 * Set clusterOptions parameters according to your HPC settings
 
+6. Run pipeline on input data.
+```
+nextflow run main.nf -profile singularity --repeatmasker_mask true --nucmer_mask true
+```   
+
 /// ---------------------------------------- ///
 
 ## INPUT:
