@@ -19,7 +19,7 @@ process SummarizeRun {
   path dup_metrics_posadasii
 
   output:
-  path "pipeline_run_summary_*.tsv"
+  path "*.tsv"
 
   """
   python ${scripts_dir}/make_run_summary.py --reads_list_file ${reads_list}
