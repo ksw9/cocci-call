@@ -90,6 +90,7 @@ reads_list_header, reads_list = reads_list[0].split('\t'), reads_list[1:]
 # Init summary report
 summary_header = ["Sample",
                   "Batch",
+                  "Assigned_Species",
                   "Raw_Reads",
                   "Raw_Reads_With_Adapters",
                   "Trimmed_Raw_Reads",
@@ -220,6 +221,31 @@ for index, row in enumerate(reads_list):
     summary['Coverage_25+_Percentage_C.immitis'].append(cov_25)
     summary['Coverage_50+_Percentage_C.immitis'].append(cov_50)
     summary['Coverage_100+_Percentage_C.posadasii'].append(cov_100)
+
+    # Assign species
+    if immitis_percentage_mapped_reads != 'NA' and posadasii_percentage_mapped_reads == 'NA':
+
+        assigned_species = 'C.immitis'
+
+    elif immitis_percentage_mapped_reads == 'NA' and posadasii_percentage_mapped_reads != 'NA'::
+
+        assigned_species = 'C.posadasii'
+
+    elif immitis_percentage_mapped_reads != 'NA' and posadasii_percentage_mapped_reads != 'NA':
+
+        if immitis_percentage_mapped_reads > posadasii_percentage_mapped_reads:
+
+            assigned_species = 'C.immitis'
+
+        else:
+
+            assigned_species = 'C.posadasii'
+
+    else:
+
+        assigned_species = 'Unknown'
+
+    summary['Assigned_Species'].append(assigned_species)
 
 ### EXPORT DATA ---------------------------- ###
 
