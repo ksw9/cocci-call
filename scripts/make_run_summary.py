@@ -67,18 +67,11 @@ def parseDuplicationReport(report_name):
 def parseCoverageReport(report_name):
     
     _, metrics_header, metrics = [block for block in open(report_name).read().split('\n\n') if '## METRICS' in block][0].split('\n')
-    histogram = [block for block in open(report_name).read().split('\n\n') if '## HISTOGRAM' in block][0].split('\n')[1:]
-    histogram = [[int(n) for n in line.split('\t')] for line in histogram[1:]]
+    metrics_header, metrics = metrics_header.split('\t'), metrics.split('\t')
+    desired_fields = ['MEAN_COVERAGE', 'MEDIAN_COVERAGE', 'SD_COVERAGE', 'PCT_5X', 'PCT_10X', 'PCT_25X', 'PCT_50X', 'PCT_100X']
+    mean_coverage, median_coverage, sd_coverage, cov_5, cov_10, cov_25, cov_50, cov_100 = [metrics[metrics_header.index(h)] if h in metrics_header else '' for h in desired_fields]
     
-    mean_coverage, median_coverage, sd_coverage = [float(metrics.split('\t')[metrics_header.split('\t').index(h)]) for h in ['MEAN_COVERAGE', 'MEDIAN_COVERAGE', 'SD_COVERAGE']]
-    
-    sum_cov = sum([h[1] for h in histogram])
-    
-    cov_5 = 100 * [h[1] for h in histogram if h[0] == 5][0] / sum_cov
-    cov_10 = 100 * [h[1] for h in histogram if h[0] == 10][0] / sum_cov
-    cov_100_plus = 100 * sum([h[1] for h in histogram if h[0] >= 100]) / sum_cov
-    
-    return mean_coverage, median_coverage, sd_coverage, cov_5, cov_10, cov_100_plus
+    return mean_coverage, median_coverage, sd_coverage, cov_5, cov_10, cov_25, cov_50, cov_100
 
 ### ------------------MAIN------------------ ###
 
@@ -114,10 +107,14 @@ summary_header = ["Sample",
                   "Coverage_Median_C.posadasii",
                   "Coverage_SD_C.immitis",
                   "Coverage_SD_C.posadasii",
-                  "Coverage_5_Percentage_C.immitis",
-                  "Coverage_5_Percentage_C.posadasii",
-                  "Coverage_10_Percentage_C.immitis",
-                  "Coverage_10_Percentage_C.posadasii",
+                  "Coverage_5+_Percentage_C.immitis",
+                  "Coverage_5+_Percentage_C.posadasii",
+                  "Coverage_10+_Percentage_C.immitis",
+                  "Coverage_10+_Percentage_C.posadasii",
+                  "Coverage_25+_Percentage_C.immitis",
+                  "Coverage_25+_Percentage_C.posadasii",
+                  "Coverage_50+_Percentage_C.immitis",
+                  "Coverage_50+_Percentage_C.posadasii",
                   "Coverage_100+_Percentage_C.immitis",
                   "Coverage_100+_Percentage_C.posadasii"]
 
@@ -191,34 +188,38 @@ for index, row in enumerate(reads_list):
     # Parse coverage info for C. immitis
     try:
         
-        mean, median, sd, cov_5, cov_10, cov_100_plus = parseCoverageReport(f'{sample}_coverage_stats_immitis.txt')
+        mean, median, sd, cov_5, cov_10, cov_25, cov_50, cov_100 = parseCoverageReport(f'{sample}_coverage_stats_immitis.txt')
         
     except:
         
-        mean, median, sd, cov_5, cov_10, cov_100_plus = 'NA', 'NA', 'NA', 'NA', 'NA', 'NA'
+        mean, median, sd, cov_5, cov_10, cov_25, cov_50, cov_100 = 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA'
     
     summary['Coverage_Mean_C.immitis'].append(mean)
     summary['Coverage_Median_C.immitis'].append(median)
     summary['Coverage_SD_C.immitis'].append(sd)
-    summary['Coverage_5_Percentage_C.immitis'].append(cov_5)
-    summary['Coverage_10_Percentage_C.immitis'].append(cov_10)
-    summary['Coverage_100+_Percentage_C.immitis'].append(cov_100_plus)
+    summary['Coverage_5+_Percentage_C.immitis'].append(cov_5)
+    summary['Coverage_10+_Percentage_C.immitis'].append(cov_10)
+    summary['Coverage_25+_Percentage_C.immitis'].append(cov_25)
+    summary['Coverage_50+_Percentage_C.immitis'].append(cov_50)
+    summary['Coverage_100+_Percentage_C.immitis'].append(cov_100)
     
     # Parse coverage info for C. posadasii
     try:
         
-        mean, median, sd, cov_5, cov_10, cov_100_plus = parseCoverageReport(f'{sample}_coverage_stats_posadasii.txt')
+        mean, median, sd, cov_5, cov_10, cov_25, cov_50, cov_100 = parseCoverageReport(f'{sample}_coverage_stats_posadasii.txt')
         
     except:
         
-        mean, median, sd, cov_5, cov_10, cov_100_plus = 'NA', 'NA', 'NA', 'NA', 'NA', 'NA'
+        mean, median, sd, cov_5, cov_10, cov_25, cov_50, cov_100 = 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA', 'NA'
     
     summary['Coverage_Mean_C.posadasii'].append(mean)
     summary['Coverage_Median_C.posadasii'].append(median)
     summary['Coverage_SD_C.posadasii'].append(sd)
-    summary['Coverage_5_Percentage_C.posadasii'].append(cov_5)
-    summary['Coverage_10_Percentage_C.posadasii'].append(cov_10)
-    summary['Coverage_100+_Percentage_C.posadasii'].append(cov_100_plus)
+    summary['Coverage_5+_Percentage_C.immitis'].append(cov_5)
+    summary['Coverage_10+_Percentage_C.immitis'].append(cov_10)
+    summary['Coverage_25+_Percentage_C.immitis'].append(cov_25)
+    summary['Coverage_50+_Percentage_C.immitis'].append(cov_50)
+    summary['Coverage_100+_Percentage_C.posadasii'].append(cov_100)
 
 ### EXPORT DATA ---------------------------- ###
 
