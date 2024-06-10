@@ -227,7 +227,7 @@ for index, row in enumerate(reads_list):
 
         assigned_species = 'C.immitis'
 
-    elif immitis_percentage_mapped_reads == 'NA' and posadasii_percentage_mapped_reads != 'NA'::
+    elif immitis_percentage_mapped_reads == 'NA' and posadasii_percentage_mapped_reads != 'NA':
 
         assigned_species = 'C.posadasii'
 
