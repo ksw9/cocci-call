@@ -216,10 +216,10 @@ for index, row in enumerate(reads_list):
     summary['Coverage_Mean_C.posadasii'].append(mean)
     summary['Coverage_Median_C.posadasii'].append(median)
     summary['Coverage_SD_C.posadasii'].append(sd)
-    summary['Coverage_5+_Percentage_C.immitis'].append(cov_5)
-    summary['Coverage_10+_Percentage_C.immitis'].append(cov_10)
-    summary['Coverage_25+_Percentage_C.immitis'].append(cov_25)
-    summary['Coverage_50+_Percentage_C.immitis'].append(cov_50)
+    summary['Coverage_5+_Percentage_C.posadasii'].append(cov_5)
+    summary['Coverage_10+_Percentage_C.posadasii'].append(cov_10)
+    summary['Coverage_25+_Percentage_C.posadasii'].append(cov_25)
+    summary['Coverage_50+_Percentage_C.posadasii'].append(cov_50)
     summary['Coverage_100+_Percentage_C.posadasii'].append(cov_100)
 
     # Assign species
