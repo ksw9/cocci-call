@@ -1,0 +1,35 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: cocci-call
+message: >-
+  Variant identification and species assignment for
+  Coccidioides spp.
+type: software
+authors:
+  - given-names: Marco
+    family-names: Marchetti
+  - given-names: Kimberly
+    family-names: Hanson
+  - given-names: Bridget
+    family-names: Barker
+  - given-names: Katharine
+    family-names: Walter
+    name-particle: S.
+    email: katharine.walter@hsc.utah.edu
+    orcid: 'https://orcid.org/0000-0003-0065-2204'
+identifiers:
+  - type: url
+    value: 'https://github.com/ksw9/cocci-call'
+repository-code: 'https://github.com/ksw9/cocci-call'
+url: 'https://github.com/ksw9/cocci-call'
+abstract: >-
+  Pipeline for Coccidioides immitis and posadasii species
+  and variant identification from short-read data for
+  epidemiology and phylogenetics. Briefly, this pipeline
+  takes raw short-read data, pre-processes reads (read
+  adapter trimming and taxonomic filtering), maps them to a
+  provided reference genome, calls variants, and outputs
+  consensus FASTA sequences for downstream applications.
+version: '1.0'
