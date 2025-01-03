@@ -19,7 +19,16 @@ process ConvertVCF {
 
   # Output - Consensus (exclude indels)
   # N.B. The vcf files come from individual samples, so no need to specify --sample in bcftools consensus (also, LoFreq does not store sample name info in the vcf).
-  bcftools consensus --include "TYPE!='indel'" --fasta-ref ${reference} --missing 'N' --absent 'N' ${vcf}  > ${sample_id}_${variant_caller}.fa
+  if [ ${params.fasta_calls_only} == false ]
+  then
+
+    bcftools consensus --include "TYPE!='indel'" --fasta-ref ${reference} ${vcf}  > ${sample_id}_${variant_caller}.fa
+
+  else
+
+    bcftools consensus --include "TYPE!='indel'" --fasta-ref ${reference} --missing 'N' --absent 'N' ${vcf}  > ${sample_id}_${variant_caller}.fa
+
+  fi
   """
 
 }

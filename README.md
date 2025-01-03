@@ -207,6 +207,8 @@ nextflow run main.nf -profile [PROFILES] [OPTIONS]
 
 * **variants_only**: set to **true** if GATK HaplotypeCaller should only output variant sites, **false** to output also invariant ones
 
+* **fasta_calls_only**: set to **true** to only include vcf calls in the output fasta, **false** to modify the reference with vcf variants
+
 /// ---------------------------------------- ///
 
 ## DEPENDENCIES:
