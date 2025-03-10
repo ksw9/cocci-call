@@ -5,8 +5,7 @@ process SnpeffInputPrep {
   label 'download_refs'
 
   input:
-  tuple val(species), path(fasta)
-  tuple val(species_copy), path(gff)
+  tuple val(species), path(fasta), path(gff)
 
   output:
   tuple val("${species}"), path("${species}_genes.gff"), emit: snpeff_input

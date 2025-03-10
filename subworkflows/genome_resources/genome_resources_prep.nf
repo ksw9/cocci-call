@@ -95,7 +95,12 @@ workflow GENOMERESOURCES {
 
   // SNPEFF INPUT PREP
 
-  SnpeffInputPrep(masked_fasta, DownloadRefs.out.gff)
+  // Merge channels
+  masked_fasta
+  .join(DownloadRefs.out.gff, by: 0, remainder: false)
+  .set{ masked_indexed_fasta }
+
+  SnpeffInputPrep(masked_fasta_and_gff)
 
   emit:
   snpeff_input = SnpeffInputPrep.out.snpeff_input
