@@ -20,7 +20,7 @@ process FilterVCF {
 
   python ${scripts_dir}/filter_vcf.py \
   --vcf_filter "${params.vcf_filter}" \
-  --vcf_file \${unzipped_file} >> filtering_stats.tsv
+  --vcf_file \${unzipped_file} >> ${sample_id}_filtering_stats.tsv
 
   filtered_file=\$(basename ${vcf} | sed "s/.vcf.gz/_filtered.vcf/g")
   bgzip \${filtered_file}
