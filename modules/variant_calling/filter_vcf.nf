@@ -4,7 +4,7 @@ process FilterVCF {
   
   label 'variantcalling'
 
-  publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*_filtered.vcf.gz"
+  publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*{_filtering_stats.txt,_filtered.vcf.gz}"
 
   input:
   each path(scripts_dir)
