@@ -3,6 +3,31 @@
 """
 This script parses a single-sample unzipped vcf file and filters it.
 N.B. Filter expression indicates variants that ARE desired (e.g. TYPE==indel => indels are kept, whereas TYPE!=indel => indels are removed)
+
+FILTER DESCRIPTION
+------------------
+
+Individual filters are separated by ||
+e.g. QD > 2.0 && FS < 60.0 || DP > 10 equals 2 filters, QD > 2.0 && FS < 60.0 and DP > 10
+
+Each filter can be composed of multiple conditions, separated by &&
+e.g. QD > 2.0 && FS < 60.0 indicates two separate conditions, QD > 2.0 and FS < 60.0
+
+Parameters that can be filtered for are:
+- Individual columns of the vcf: '#CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER'
+- Data from the 'INFO' or 'FORMAT' columns: GT, AD, DP, GQ, etc.
+
+Variants can also be filtered by type:
+e.g. TYPE == "SNP" will only keep SNPs and remove insertions and indels
+
+If --remove_extreme_depth or --remove_extreme_qual are set in the command line arguments, then variants with depth or quality above/below 2 standard deviations from mean depth/quality are removed
+
+Example of filter string:    
+QD > 2.0 && QUAL > 20 && DP > 10 || TYPE == "SNP"
+
+This will generate two filters:
+1) Filter for QD, QUAL, and DP values
+2) Only keep SNPs
 """
 
 ### ---------------------------------------- ###
@@ -50,8 +75,8 @@ def parse_args():
 def parse_vcf_filter(filter_string):
     
     # Parsing multi-parameters filter string e.g. 'QD > 2.0 && FS < 60.0 && MQ > 40.0 && DP > 10 && QUAL > 20 && QUAL != "." && RGQ > 20'
-    # String is first broken in '&&' blocks, then the terms are parsed and stored into individual filters.
-    # Note that expressions can have || conditions in parenthesis (e.g. (QD > 2 || DP > 10))
+    # String is first broken in || blocks which indicate separate filters (e.g. QD > 2.0 && FS < 60.0 || DP > 10 equals 2 filters, QD > 2.0 && FS < 60.0 and DP > 10)
+    # Filter blocks are further broken in '&&' blocks, then the terms are parsed and stored into individual subfilters.
     
     filter_string = filter_string.replace(' ', '').split('||')
     
@@ -295,11 +320,11 @@ if len(vcf_data):
     # Init list of filtered values
     all_filters = []
 
-    # Depth filter
+    # Extreme depth filter
     depth_filter = depth_outlier_filter(vcf_columns, vcf_data, depth_filter_toggle)
     all_filters.append(depth_filter)
 
-    # Get qual mean and std
+    # Extreme quality filter
     qual_filter = depth_outlier_filter(vcf_columns, vcf_data, qual_filter_toggle)
     all_filters.append(qual_filter)
 
