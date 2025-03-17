@@ -12,16 +12,16 @@ process FilterVCF {
 
   output:
   tuple val(sample_id), val(batch), path("${sample_id}*_filtered.vcf.gz"), emit: filtered_vcf
+  tuple val(sample_id), val(batch), path("${sample_id}_filtering_stats.txt"), emit: vcf_filtering_stats
 
   """
   bgzip -d ${vcf}
   unzipped_file=\$(basename ${vcf} | sed "s/.gz//g")
-  echo \${unzipped_file} >> ${sample_id}_filtering_stats.txt
 
   python ${scripts_dir}/filter_vcf.py \
   --vcf_filter "${params.vcf_filter}" \
   --vcf_file \${unzipped_file} \
-  ${params.additional_vcf_filtering} >> ${sample_id}_filtering_stats.tsv
+  ${params.additional_vcf_filtering} >> ${sample_id}_filtering_stats.txt
 
   filtered_file=\$(basename ${vcf} | sed "s/.vcf.gz/_filtered.vcf/g")
   bgzip \${filtered_file}
