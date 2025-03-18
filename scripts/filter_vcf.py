@@ -144,7 +144,7 @@ def parse_vcf(path):
 
 def depth_outlier_filter(cols, data, toggle):
     
-    if toggle:
+    if toggle and len(data) >= 10:
 
         # Get depth mean and std
         info_col = cols.index('INFO')
@@ -164,7 +164,7 @@ def depth_outlier_filter(cols, data, toggle):
 
 def qual_outlier_filter(cols, data, toggle):
     
-    if toggle:
+    if toggle and len(data) >= 10:
 
         # Get depth mean and std
         qual_col = cols.index('QUAL')
