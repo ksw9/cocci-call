@@ -98,7 +98,7 @@ workflow GENOMERESOURCES {
   // Merge channels
   masked_fasta
   .join(DownloadRefs.out.gff, by: 0, remainder: false)
-  .set{ masked_indexed_fasta }
+  .set{ masked_fasta_and_gff }
 
   SnpeffInputPrep(masked_fasta_and_gff)
 
