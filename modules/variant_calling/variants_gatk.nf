@@ -4,14 +4,14 @@ process VariantsGATK {
   
   label 'variantcalling'
 
-  publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*_{gatk.g,gatk_unfilt}.vcf.gz"
+  publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*_{gatk.g,gatk_unfilt,gatk_unfilt_norm}.vcf.gz"
 
   input:
   tuple val(sample_id), val(batch), path(reference), path(reference_index), path(dictionary), path(bam)
 
   output:
   //tuple val(sample_id), val(batch), path("${sample_id}_gatk.g.vcf.gz"), emit: gatk_gvcf
-  tuple val(sample_id), val(batch), path("${sample_id}_gatk_unfilt.vcf.gz"), emit: gatk_vcf_unfiltered
+  tuple val(sample_id), val(batch), path("${sample_id}_gatk_unfilt_norm.vcf.gz"), emit: gatk_vcf_unfiltered
 
   """
   # Indexing bam
@@ -37,6 +37,14 @@ process VariantsGATK {
     -ploidy ${params.ploidy} \
     --include-non-variant-sites true \
     --output ${sample_id}_gatk_unfilt.vcf.gz
+
+    # vcf normalization
+    bcftools norm \
+    -f ${reference} \
+    -m -both \
+    -O z \
+    -o ${sample_id}_gatk_unfilt_norm.vcf.gz \
+    ${sample_id}_gatk_unfilt.vcf.gz
   
   else
 
@@ -57,6 +65,14 @@ process VariantsGATK {
     -ploidy ${params.ploidy} \
     --include-non-variant-sites false \
     --output ${sample_id}_gatk_unfilt.vcf.gz
+
+    # vcf normalization
+    bcftools norm \
+    -f ${reference} \
+    -m -both \
+    -O z \
+    -o ${sample_id}_gatk_unfilt_norm.vcf.gz \
+    ${sample_id}_gatk_unfilt.vcf.gz
   
   fi
   """
