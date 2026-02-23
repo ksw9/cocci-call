@@ -11,10 +11,10 @@ process CheckMappedFiles {
   each path(posadasii_reference_fasta)
   each path(posadasii_reference_fasta_index)
   each path(posadasii_gatk_dictionary)
-  tuple val(sample_id), val(batch), path(immitis_bam), path(immitis_mapping_report), path(posadasii_bam), path(posadasii_mapping_report)
+  tuple val(sample_id), val(batch), path(immitis_bam), path(immitis_bai), path(immitis_mapping_report), path(posadasii_bam), path(posadasii_bai), path(posadasii_mapping_report)
 
   output:
-  tuple val(sample_id), val(batch), path("${sample_id}_*.bam"), emit: bam_files
+  tuple val(sample_id), val(batch), path("${sample_id}_*.bam"), path("${sample_id}_*.bam.bai"), emit: bam_files
   tuple val(sample_id), val(batch), path("*.fasta"), emit: reference_fasta
   tuple val(sample_id), val(batch), path("*.fasta.fai"), emit: reference_fasta_index
   tuple val(sample_id), val(batch), path("*.dict"), emit: gatk_dictionary
@@ -26,6 +26,7 @@ process CheckMappedFiles {
 
     # Kraken2 assignment to C. immitis
     cp ${immitis_bam} ${sample_id}_immitis.bam
+    cp ${immitis_bai} ${sample_id}_immitis.bam.bai
     cp ${immitis_reference_fasta} immitis.fasta
     cp ${immitis_reference_fasta_index} immitis.fasta.fai
     cp ${immitis_gatk_dictionary} immitis.dict
@@ -35,6 +36,7 @@ process CheckMappedFiles {
 
     # Kraken2 assignment to C. posadasii
     cp ${posadasii_bam} ${sample_id}_posadasii.bam
+    cp ${posadasii_bai} ${sample_id}_posadasii.bam.bai
     cp ${posadasii_reference_fasta} posadasii.fasta
     cp ${posadasii_reference_fasta_index} posadasii.fasta.fai
     cp ${posadasii_gatk_dictionary} posadasii.dict
@@ -51,6 +53,7 @@ process CheckMappedFiles {
     then
 
       cp ${immitis_bam} ${sample_id}_immitis.bam
+      cp ${immitis_bai} ${sample_id}_immitis.bam.bai
       cp ${immitis_reference_fasta} immitis.fasta
       cp ${immitis_reference_fasta_index} immitis.fasta.fai
       cp ${immitis_gatk_dictionary} immitis.dict
@@ -58,6 +61,7 @@ process CheckMappedFiles {
     else
 
       cp ${posadasii_bam} ${sample_id}_posadasii.bam
+      cp ${posadasii_bai} ${sample_id}_posadasii.bam.bai
       cp ${posadasii_reference_fasta} posadasii.fasta
       cp ${posadasii_reference_fasta_index} posadasii.fasta.fai
       cp ${posadasii_gatk_dictionary} posadasii.dict

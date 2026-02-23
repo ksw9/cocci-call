@@ -5,6 +5,7 @@ process MapReads_BWA {
   label 'mapping'
 
   publishDir "${projectDir}/results/${batch}/${sample_id}/bams", mode: "copy", pattern: "*_merged_mrkdup_${target_species}.bam"
+  publishDir "${projectDir}/results/${batch}/${sample_id}/bams", mode: "copy", pattern: "*_merged_mrkdup_${target_species}.bam.bai"
   publishDir "${projectDir}/results/${batch}/${sample_id}/stats", mode: "copy", pattern: "*_mapping_${target_species}.log"
   publishDir "${projectDir}/results/${batch}/${sample_id}/stats", mode: "copy", pattern: "*_coverage_stats_${target_species}.txt"
   publishDir "${projectDir}/results/${batch}/${sample_id}/stats", mode: "copy", pattern: "*_marked_dup_metrics_${target_species}.txt"
@@ -13,10 +14,10 @@ process MapReads_BWA {
   each target_species
   each path(reference_fasta)
   path(bwa_index)
-  tuple val(sample_id), path(read1), path(read2), val(batch)
+  tuple val(sample_id), val(batch), path(read1), path(read2)
 
   output:
-  tuple val(sample_id), val(batch), path("${sample_id}_merged_mrkdup_*.bam"), path("${sample_id}_mapping_*.log"), emit: bam_files
+  tuple val(sample_id), val(batch), path("${sample_id}_merged_mrkdup_*.bam"), path("${sample_id}_merged_mrkdup_*.bam.bai"), path("${sample_id}_mapping_*.log"), emit: bam_files
   path "${sample_id}_mapping_*.log", emit: mapping_reports
   path "${sample_id}_coverage_stats_*.txt", emit: coverage_stats
   path "${sample_id}_marked_dup_metrics_*.txt", emit: dup_metrics
@@ -110,7 +111,10 @@ process MapReads_BWA {
     gatk MarkDuplicates \
     -I temp_rg.bam \
     -O ${sample_id}_merged_mrkdup_${target_species}.bam  \
-    -M ${sample_id}_marked_dup_metrics_${target_species}.txt  
+    -M ${sample_id}_marked_dup_metrics_${target_species}.txt
+
+    # Indexing bam
+    samtools index ${sample_id}_merged_mrkdup_${target_species}.bam
       
     # Mark duplicates with Spark (also sorts BAM) & produce library complexity metrics
     # Need to use Java 7 or Java 11 (https://gatk.broadinstitute.org/hc/en-us/community/posts/4417665825307-java-lang-reflect-InaccessibleObjectException-Unable-to-make-field-transient-java-lang-Object-java-util-ArrayList-elementData-accessible-module-java-base-does-not-opens-java-util-to-unnamed-module-3bf44630)
@@ -125,6 +129,7 @@ process MapReads_BWA {
 
     # Creating mock outputs
     touch ${sample_id}_merged_mrkdup_mock.bam
+    touch ${sample_id}_merged_mrkdup_mock.bam.bai
     touch ${sample_id}_mapping_mock.log
     touch ${sample_id}_coverage_stats_mock.txt
     touch ${sample_id}_marked_dup_metrics_mock.txt

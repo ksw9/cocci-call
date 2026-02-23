@@ -2,7 +2,7 @@ process AnnotateVCF {
 
   // Annotate VCF for variant examination
   
-  label 'variantcalling'
+  label 'download_refs'
 
   publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "${sample_id}_${variant_caller}_ann.vcf.gz"
 
@@ -10,15 +10,12 @@ process AnnotateVCF {
   each variant_caller
   each path(snpeff_dir)
   each path(snpeff_datapath)
-  tuple val(sample_id), val(batch), path(reference), path(vcf)
+  tuple val(sample_id), val(batch), path(reference), path(vcf), path(index)
 
   output:
   path "${sample_id}_${variant_caller}_ann.vcf.gz"
 
   """
-  # Index vcf
-  tabix ${vcf}
-
   if [[ "${reference}" == "immitis.fasta" ]]
   then
 

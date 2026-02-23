@@ -8,18 +8,15 @@ process ConvertVCF {
 
   input:
   each variant_caller
-  tuple val(sample_id), val(batch), path(reference), path(vcf)
+  tuple val(sample_id), val(batch), path(reference), path(vcf), path(index)
 
   output:
   path "${sample_id}_${variant_caller}.fa", emit: unmasked_fasta
 
   """
-  # Index vcf
-  tabix -p vcf ${vcf}
-
   # Output - Consensus (exclude indels)
   # N.B. The vcf files come from individual samples, so no need to specify --sample in bcftools consensus (also, LoFreq does not store sample name info in the vcf).
-  if [ ${params.fasta_calls_only} == false ]
+  if [ ${params.fasta_vcf_sites_only} == false ]
   then
 
     bcftools consensus --include "TYPE!='indel'" --fasta-ref ${reference} ${vcf}  > ${sample_id}_${variant_caller}.fa

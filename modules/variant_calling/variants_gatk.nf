@@ -7,17 +7,14 @@ process VariantsGATK {
   publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*_{gatk.g,gatk_unfilt,gatk_unfilt_norm}.vcf.gz"
 
   input:
-  tuple val(sample_id), val(batch), path(reference), path(reference_index), path(dictionary), path(bam)
+  tuple val(sample_id), val(batch), path(reference), path(reference_index), path(dictionary), path(bam), path(bai)
 
   output:
-  //tuple val(sample_id), val(batch), path("${sample_id}_gatk.g.vcf.gz"), emit: gatk_gvcf
+  tuple val(sample_id), val(batch), path("${sample_id}_gatk.g.vcf.gz"), emit: gatk_gvcf
   tuple val(sample_id), val(batch), path("${sample_id}_gatk_unfilt_norm.vcf.gz"), emit: gatk_vcf_unfiltered
 
   """
-  # Indexing bam
-  samtools index ${bam}
-
-  if [ ${params.variants_only} == false ]
+  if [ ${params.vcf_variants_only} == false ]
   then 
   
     # Call variants with GATK, output GVCF

@@ -50,12 +50,19 @@ workflow VARIANTCALLING {
     .collect()
     .set{ kraken_database }
 
+  // Channels for snpEff resources
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_dir}")
+    .set{ snpeff_dir }
+
+  Channel.fromPath("${params.resources_dir}/${params.snpeff_datapath}")
+    .set{ snpeff_datapath }
+
   // CREATING RAW-READS CHANNEL ----------- //
 
   Channel
     .fromPath("${params.resources_dir}/${params.reads_list}")
     .splitCsv(header: true, sep: '\t')
-    .map{row -> tuple(row.sample, row.fastq_1, row.fastq_2, row.batch)}
+    .map{ row -> tuple(row.sample, row.batch, row.fastq_1, row.fastq_2) }
     .set{ raw_reads }
 
   // TRIMGALORE --------------------------- //
@@ -90,13 +97,13 @@ workflow VARIANTCALLING {
   // VARIANT CALLING ---------------------- //
 
   // GATK variant calling, consensus fasta generation, and cvs file annotation
-  GATK(scripts_dir, CheckMappedFiles.out.bam_files, CheckMappedFiles.out.reference_fasta, CheckMappedFiles.out.reference_fasta_index, CheckMappedFiles.out.gatk_dictionary)
+  GATK(scripts_dir, CheckMappedFiles.out.reference_fasta, CheckMappedFiles.out.reference_fasta_index, CheckMappedFiles.out.gatk_dictionary, snpeff_dir, snpeff_datapath, CheckMappedFiles.out.bam_files)
   
   // Running LoFreq variant calling and cvs file annotation, if desired
 
   if (params.run_lofreq == true) {
 
-    LOFREQ(CheckMappedFiles.out.bam_files, CheckMappedFiles.out.reference_fasta, CheckMappedFiles.out.reference_fasta_index)
+    LOFREQ(CheckMappedFiles.out.reference_fasta, CheckMappedFiles.out.reference_fasta_index, snpeff_dir, snpeff_datapath, CheckMappedFiles.out.bam_files)
 
   }
 

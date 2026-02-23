@@ -7,7 +7,7 @@ process VariantsLoFreq {
   publishDir "${projectDir}/results/${batch}/${sample_id}/vars", mode: "copy", pattern: "*{_lofreq_unfilt,_lofreq_filt}.vcf.gz"
 
   input:
-  tuple val(sample_id), val(batch), path(reference), path(reference_index), path(bam)
+  tuple val(sample_id), val(batch), path(reference), path(reference_index), path(bam), path(bai)
 
   output:
   tuple val(sample_id), val(batch), path("${sample_id}_lofreq_unfilt.vcf.gz"), emit: lofreq_vcf_unfiltered

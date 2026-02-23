@@ -9,11 +9,11 @@ process Kraken {
 
   input:
   path(kraken_db)
-  tuple val(sample_id), path(read1), path(read2), val(batch)
+  tuple val(sample_id), val(batch), path(read1), path(read2)
 
   output:
   path "*_kraken.report", emit: kraken_reports
-  tuple val("${sample_id}"), path("${sample_id}_*_kr_1.fq.gz"), path("${sample_id}_*_kr_2.fq.gz"), val("${batch}"), emit: kraken_filtered_files
+  tuple val(sample_id), val(batch), path("${sample_id}_*_kr_1.fq.gz"), path("${sample_id}_*_kr_2.fq.gz"), emit: kraken_filtered_files
 
   """
   # run kraken to taxonomically classify paired-end reads and write output file.
